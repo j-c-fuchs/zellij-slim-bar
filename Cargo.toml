@@ -1,6 +1,7 @@
 [package]
 name = "slim-bar"
 version = "0.1.0"
+authors = ["J. C. Fuchs <j-c-fuchs.git@pm.me>"]
 edition = "2021"
 license = "MIT"
 
