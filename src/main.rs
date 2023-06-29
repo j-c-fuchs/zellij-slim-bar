@@ -133,11 +133,12 @@ impl ZellijPlugin for SlimBar {
             if self.should_change_tab
                 && self.mouse_click_pos >= len_cnt
                 && self.mouse_click_pos < len_cnt + bar_part.len
-                && bar_part.tab_index.is_some()
             {
-                // Tabs are indexed starting from 1, therefore we need add 1 to tab_index.
-                let tab_index: u32 = bar_part.tab_index.unwrap().try_into().unwrap();
-                switch_tab_to(tab_index + 1);
+                let to_u32 = |x| { <usize as TryInto<u32>>::try_into(x).ok() };
+                if let Some(tab_index) = bar_part.tab_index.and_then(to_u32) {
+                    // Tabs are indexed starting from 1, therefore we need add 1 to tab_index.
+                    switch_tab_to(tab_index + 1);
+                }
             }
             len_cnt += bar_part.len;
         }
