@@ -117,7 +117,7 @@ fn left_more_message(
     // 238
     // chars length plus separator length on both sides
     let more_text_len = more_text.width();
-    let (text_color, sep_color) = match palette.theme_hue {
+    let (text_color, _sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
@@ -147,7 +147,7 @@ fn right_more_message(
     };
     // chars length plus separator length on both sides
     let more_text_len = more_text.width();
-    let (text_color, sep_color) = match palette.theme_hue {
+    let (text_color, _sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
