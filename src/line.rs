@@ -250,15 +250,15 @@ pub fn tab_line(
     } else {
         tabs_before_active.pop().unwrap()
     };
-    let mut prefix = match hide_session_name {
+    let mut line = match hide_session_name {
         true => tab_line_prefix(None, mode, palette, cols),
         false => tab_line_prefix(session_name, mode, palette, cols),
     };
-    let prefix_len = get_current_title_len(&prefix);
+    let prefix_len = get_current_title_len(&line);
 
     // if active tab alone won't fit in cols, don't draw any tabs
     if prefix_len + active_tab.len > cols {
-        return prefix;
+        return line;
     }
 
     let mut tabs_to_render = vec![active_tab];
@@ -270,9 +270,9 @@ pub fn tab_line(
         cols.saturating_sub(prefix_len),
         palette,
     );
-    prefix.append(&mut tabs_to_render);
+    line.append(&mut tabs_to_render);
 
-    let current_title_len = get_current_title_len(&prefix);
+    let current_title_len = get_current_title_len(&line);
     if current_title_len < cols {
         let mut remaining_space = cols - current_title_len;
         if let Some(swap_layout_status) = swap_layout_status(
@@ -287,16 +287,16 @@ pub fn tab_line(
             for _ in 0..remaining_space {
                 buffer.push_str(&style!(palette.black, palette.black).paint(" ").to_string());
             }
-            prefix.push(LinePart {
+            line.push(LinePart {
                 part: buffer,
                 len: remaining_space,
                 tab_index: None,
             });
-            prefix.push(swap_layout_status);
+            line.push(swap_layout_status);
         }
     }
 
-    prefix
+    line
 }
 
 fn swap_layout_status(
