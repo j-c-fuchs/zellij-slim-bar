@@ -1,7 +1,7 @@
 use ansi_term::ANSIStrings;
 use unicode_width::UnicodeWidthStr;
 
-use crate::{LinePart, ARROW_SEPARATOR};
+use crate::LinePart;
 use zellij_tile::prelude::*;
 use zellij_tile_utils::style;
 
@@ -32,7 +32,7 @@ fn populate_tabs_in_tab_line(
         let collapsed_left = left_more_message(
             left_count,
             palette,
-            tab_separator(capabilities),
+            "",
             left_more_tab_index,
         );
         // right_more_tab_index is the tab to the right of the rightmost visible tab
@@ -40,7 +40,7 @@ fn populate_tabs_in_tab_line(
         let collapsed_right = right_more_message(
             right_count,
             palette,
-            tab_separator(capabilities),
+            "",
             right_more_tab_index,
         );
 
@@ -240,14 +240,6 @@ fn tab_line_prefix(
     parts
 }
 
-pub fn tab_separator(capabilities: PluginCapabilities) -> &'static str {
-    if !capabilities.arrow_fonts {
-        ARROW_SEPARATOR
-    } else {
-        ""
-    }
-}
-
 pub fn tab_line(
     session_name: Option<&str>,
     mut all_tabs: Vec<LinePart>,
@@ -299,7 +291,7 @@ pub fn tab_line(
             is_swap_layout_dirty,
             mode,
             &palette,
-            tab_separator(capabilities),
+            "",
         ) {
             remaining_space -= swap_layout_status.len;
             let mut buffer = String::new();

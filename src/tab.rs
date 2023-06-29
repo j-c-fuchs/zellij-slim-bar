@@ -1,4 +1,4 @@
-use crate::{line::tab_separator, LinePart};
+use crate::LinePart;
 use ansi_term::{ANSIString, ANSIStrings};
 use unicode_width::UnicodeWidthStr;
 use zellij_tile::prelude::*;
@@ -88,13 +88,9 @@ pub fn tab_style(
     palette: Palette,
     capabilities: PluginCapabilities,
 ) -> LinePart {
-    let separator = tab_separator(capabilities);
+    let separator = "";
     if tab.is_sync_panes_active {
         tabname.push_str(" (Sync)");
-    }
-    // we only color alternate tabs differently if we can't use the arrow fonts to separate them
-    if !capabilities.arrow_fonts {
-        is_alternate_tab = false;
     }
 
     render_tab(tabname, tab, is_alternate_tab, palette, separator)

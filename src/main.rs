@@ -25,8 +25,6 @@ struct SlimBar {
     should_change_tab: bool,
 }
 
-static ARROW_SEPARATOR: &str = "";
-
 register_plugin!(SlimBar);
 
 impl ZellijPlugin for SlimBar {
