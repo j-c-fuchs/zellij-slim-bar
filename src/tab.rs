@@ -22,10 +22,9 @@ pub fn render_tab(
     tab: &TabInfo,
     is_alternate_tab: bool,
     palette: Palette,
-    separator: &str,
 ) -> LinePart {
     let focused_clients = tab.other_focused_clients.as_slice();
-    let separator_width = separator.width();
+    let separator_width = "".width();
     let alternate_tab_color = match palette.theme_hue {
         // TODO: only do this if we don't have the arrow capabilities
         ThemeHue::Dark => palette.white,
@@ -42,14 +41,14 @@ pub fn render_tab(
         ThemeHue::Dark => palette.black,
         ThemeHue::Light => palette.white,
     };
-    let left_separator = style!(foreground_color, background_color).paint(separator);
+    let left_separator = style!(foreground_color, background_color).paint("");
     let mut tab_text_len = text.width() + (separator_width * 2) + 2; // + 2 for padding
 
     let tab_styled_text = style!(foreground_color, background_color)
         .bold()
         .paint(format!(" {} ", text));
 
-    let right_separator = style!(background_color, foreground_color).paint(separator);
+    let right_separator = style!(background_color, foreground_color).paint("");
     let tab_styled_text = if !focused_clients.is_empty() {
         let (cursor_section, extra_length) = cursors(focused_clients, palette);
         tab_text_len += extra_length;
@@ -88,10 +87,9 @@ pub fn tab_style(
     palette: Palette,
     capabilities: PluginCapabilities,
 ) -> LinePart {
-    let separator = "";
     if tab.is_sync_panes_active {
         tabname.push_str(" (Sync)");
     }
 
-    render_tab(tabname, tab, is_alternate_tab, palette, separator)
+    render_tab(tabname, tab, is_alternate_tab, palette)
 }

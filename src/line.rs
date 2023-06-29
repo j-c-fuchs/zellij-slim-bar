@@ -32,7 +32,6 @@ fn populate_tabs_in_tab_line(
         let collapsed_left = left_more_message(
             left_count,
             palette,
-            "",
             left_more_tab_index,
         );
         // right_more_tab_index is the tab to the right of the rightmost visible tab
@@ -40,7 +39,6 @@ fn populate_tabs_in_tab_line(
         let collapsed_right = right_more_message(
             right_count,
             palette,
-            "",
             right_more_tab_index,
         );
 
@@ -108,7 +106,6 @@ fn populate_tabs_in_tab_line(
 fn left_more_message(
     tab_count_to_the_left: usize,
     palette: Palette,
-    separator: &str,
     tab_index: usize,
 ) -> LinePart {
     if tab_count_to_the_left == 0 {
@@ -121,14 +118,14 @@ fn left_more_message(
     };
     // 238
     // chars length plus separator length on both sides
-    let more_text_len = more_text.width() + 2 * separator.width();
+    let more_text_len = more_text.width() + 2 * "".width();
     let (text_color, sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
-    let left_separator = style!(sep_color, palette.orange).paint(separator);
+    let left_separator = style!(sep_color, palette.orange).paint("");
     let more_styled_text = style!(text_color, palette.orange).bold().paint(more_text);
-    let right_separator = style!(palette.orange, sep_color).paint(separator);
+    let right_separator = style!(palette.orange, sep_color).paint("");
     let more_styled_text =
         ANSIStrings(&[left_separator, more_styled_text, right_separator]).to_string();
     LinePart {
@@ -141,7 +138,6 @@ fn left_more_message(
 fn right_more_message(
     tab_count_to_the_right: usize,
     palette: Palette,
-    separator: &str,
     tab_index: usize,
 ) -> LinePart {
     if tab_count_to_the_right == 0 {
@@ -153,14 +149,14 @@ fn right_more_message(
         " +many → ".to_string()
     };
     // chars length plus separator length on both sides
-    let more_text_len = more_text.width() + 2 * separator.width();
+    let more_text_len = more_text.width() + 2 * "".width();
     let (text_color, sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
-    let left_separator = style!(sep_color, palette.orange).paint(separator);
+    let left_separator = style!(sep_color, palette.orange).paint("");
     let more_styled_text = style!(text_color, palette.orange).bold().paint(more_text);
-    let right_separator = style!(palette.orange, sep_color).paint(separator);
+    let right_separator = style!(palette.orange, sep_color).paint("");
     let more_styled_text =
         ANSIStrings(&[left_separator, more_styled_text, right_separator]).to_string();
     LinePart {
@@ -291,7 +287,6 @@ pub fn tab_line(
             is_swap_layout_dirty,
             mode,
             &palette,
-            "",
         ) {
             remaining_space -= swap_layout_status.len;
             let mut buffer = String::new();
@@ -316,7 +311,6 @@ fn swap_layout_status(
     is_swap_layout_damaged: bool,
     input_mode: InputMode,
     palette: &Palette,
-    separator: &str,
 ) -> Option<LinePart> {
     match swap_layout_name {
         Some(swap_layout_name) => {
@@ -327,27 +321,27 @@ fn swap_layout_status(
             let (prefix_separator, swap_layout_name, suffix_separator) =
                 if input_mode == InputMode::Locked {
                     (
-                        style!(palette.black, palette.fg).paint(separator),
+                        style!(palette.black, palette.fg).paint(""),
                         style!(palette.black, palette.fg)
                             .italic()
                             .paint(&swap_layout_name),
-                        style!(palette.fg, palette.black).paint(separator),
+                        style!(palette.fg, palette.black).paint(""),
                     )
                 } else if is_swap_layout_damaged {
                     (
-                        style!(palette.black, palette.fg).paint(separator),
+                        style!(palette.black, palette.fg).paint(""),
                         style!(palette.black, palette.fg)
                             .bold()
                             .paint(&swap_layout_name),
-                        style!(palette.fg, palette.black).paint(separator),
+                        style!(palette.fg, palette.black).paint(""),
                     )
                 } else {
                     (
-                        style!(palette.black, palette.green).paint(separator),
+                        style!(palette.black, palette.green).paint(""),
                         style!(palette.black, palette.green)
                             .bold()
                             .paint(&swap_layout_name),
-                        style!(palette.green, palette.black).paint(separator),
+                        style!(palette.green, palette.black).paint(""),
                     )
                 };
             let swap_layout_indicator = format!(
