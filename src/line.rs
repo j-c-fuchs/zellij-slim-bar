@@ -1,4 +1,3 @@
-use ansi_term::ANSIStrings;
 use unicode_width::UnicodeWidthStr;
 
 use crate::LinePart;
@@ -122,8 +121,10 @@ fn left_more_message(
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
-    let more_styled_text = style!(text_color, palette.orange).bold().paint(more_text);
-    let more_styled_text = ANSIStrings(&[more_styled_text]).to_string();
+    let more_styled_text = style!(text_color, palette.orange)
+        .bold()
+        .paint(more_text)
+        .to_string();
     LinePart {
         part: more_styled_text,
         len: more_text_len,
@@ -150,8 +151,10 @@ fn right_more_message(
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
-    let more_styled_text = style!(text_color, palette.orange).bold().paint(more_text);
-    let more_styled_text = ANSIStrings(&[more_styled_text]).to_string();
+    let more_styled_text = style!(text_color, palette.orange)
+        .bold()
+        .paint(more_text)
+        .to_string();
     LinePart {
         part: more_styled_text,
         len: more_text_len,
