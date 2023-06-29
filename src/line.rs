@@ -168,9 +168,14 @@ fn tab_line_prefix(
     palette: Palette,
     cols: usize,
 ) -> Vec<LinePart> {
-    let prefix_text = " Zellij ".to_string();
+    vec![
+        zellij_prefix_part(palette, cols),
+        session_part(session_name, palette, cols),
+        mode_part(mode, palette, cols),
+    ]
+}
 
-    let prefix_text_len = prefix_text.chars().count();
+fn zellij_prefix_part(palette: Palette, cols: usize) -> LinePart {
     let text_color = match palette.theme_hue {
         ThemeHue::Dark => palette.white,
         ThemeHue::Light => palette.black,
@@ -180,32 +185,50 @@ fn tab_line_prefix(
         ThemeHue::Light => palette.white,
     };
 
+    let prefix_text = " Zellij ".to_string();
+    let prefix_text_len = prefix_text.chars().count();
+    let prefix_styled_text = style!(text_color, bg_color).bold().paint(prefix_text);
+    LinePart {
+        part: prefix_styled_text.to_string(),
+        len: prefix_text_len,
+        tab_index: None,
+    }
+}
+
+fn session_part(session_name: Option<&str>, palette: Palette, cols: usize) -> LinePart {
+    let bg_color = match palette.theme_hue {
+        ThemeHue::Dark => palette.black,
+        ThemeHue::Light => palette.white,
+    };
+
+    let name = match session_name {
+        Some(n) => n,
+        None => "<unnamed>",
+    };
+    let name_part = format!(" {} ", name);
+    let name_part_len = name_part.width();
+    let text_color = match palette.theme_hue {
+        ThemeHue::Dark => palette.white,
+        ThemeHue::Light => palette.black,
+    };
+    let name_part_styled_text = style!(text_color, bg_color).bold().paint(name_part);
+    LinePart {
+        part: name_part_styled_text.to_string(),
+        len: name_part_len,
+        tab_index: None,
+    }
+}
+
+fn mode_part(mode: InputMode, palette: Palette, cols: usize) -> LinePart {
+    let bg_color = match palette.theme_hue {
+        ThemeHue::Dark => palette.black,
+        ThemeHue::Light => palette.white,
+    };
+
     let locked_mode_color = palette.magenta;
     let normal_mode_color = palette.green;
     let other_modes_color = palette.orange;
 
-    let prefix_styled_text = style!(text_color, bg_color).bold().paint(prefix_text);
-    let mut parts = vec![LinePart {
-        part: prefix_styled_text.to_string(),
-        len: prefix_text_len,
-        tab_index: None,
-    }];
-    if let Some(name) = session_name {
-        let name_part = format!("({}) ", name);
-        let name_part_len = name_part.width();
-        let text_color = match palette.theme_hue {
-            ThemeHue::Dark => palette.white,
-            ThemeHue::Light => palette.black,
-        };
-        let name_part_styled_text = style!(text_color, bg_color).bold().paint(name_part);
-        if cols.saturating_sub(prefix_text_len) >= name_part_len {
-            parts.push(LinePart {
-                part: name_part_styled_text.to_string(),
-                len: name_part_len,
-                tab_index: None,
-            })
-        }
-    }
     let mode_part = format!("{:?}", mode).to_uppercase();
     let mode_part_padded = format!("{:^8}", mode_part);
     let mode_part_len = mode_part_padded.width();
@@ -222,14 +245,11 @@ fn tab_line_prefix(
             .bold()
             .paint(mode_part_padded)
     };
-    if cols.saturating_sub(prefix_text_len) >= mode_part_len {
-        parts.push(LinePart {
-            part: format!("{}", mode_part_styled_text),
-            len: mode_part_len,
-            tab_index: None,
-        })
+    LinePart {
+        part: format!("{}", mode_part_styled_text),
+        len: mode_part_len,
+        tab_index: None,
     }
-    parts
 }
 
 pub fn tab_line(
