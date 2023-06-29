@@ -24,7 +24,6 @@ pub fn render_tab(
     palette: Palette,
 ) -> LinePart {
     let focused_clients = tab.other_focused_clients.as_slice();
-    let separator_width = "".width();
     let alternate_tab_color = match palette.theme_hue {
         // TODO: only do this if we don't have the arrow capabilities
         ThemeHue::Dark => palette.white,
@@ -41,14 +40,12 @@ pub fn render_tab(
         ThemeHue::Dark => palette.black,
         ThemeHue::Light => palette.white,
     };
-    let left_separator = style!(foreground_color, background_color).paint("");
-    let mut tab_text_len = text.width() + (separator_width * 2) + 2; // + 2 for padding
+    let mut tab_text_len = text.width() + 2; // + 2 for padding
 
     let tab_styled_text = style!(foreground_color, background_color)
         .bold()
         .paint(format!(" {} ", text));
 
-    let right_separator = style!(background_color, foreground_color).paint("");
     let tab_styled_text = if !focused_clients.is_empty() {
         let (cursor_section, extra_length) = cursors(focused_clients, palette);
         tab_text_len += extra_length;
@@ -62,15 +59,13 @@ pub fn render_tab(
             .bold()
             .paint("]")
             .to_string();
-        s.push_str(&left_separator.to_string());
         s.push_str(&tab_styled_text.to_string());
         s.push_str(&cursor_beginning);
         s.push_str(&cursor_section);
         s.push_str(&cursor_end);
-        s.push_str(&right_separator.to_string());
         s
     } else {
-        ANSIStrings(&[left_separator, tab_styled_text, right_separator]).to_string()
+        ANSIStrings(&[tab_styled_text]).to_string()
     };
 
     LinePart {

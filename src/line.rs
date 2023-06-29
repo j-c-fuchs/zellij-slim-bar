@@ -117,16 +117,13 @@ fn left_more_message(
     };
     // 238
     // chars length plus separator length on both sides
-    let more_text_len = more_text.width() + 2 * "".width();
+    let more_text_len = more_text.width();
     let (text_color, sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
-    let left_separator = style!(sep_color, palette.orange).paint("");
     let more_styled_text = style!(text_color, palette.orange).bold().paint(more_text);
-    let right_separator = style!(palette.orange, sep_color).paint("");
-    let more_styled_text =
-        ANSIStrings(&[left_separator, more_styled_text, right_separator]).to_string();
+    let more_styled_text = ANSIStrings(&[more_styled_text]).to_string();
     LinePart {
         part: more_styled_text,
         len: more_text_len,
@@ -148,16 +145,13 @@ fn right_more_message(
         " +many → ".to_string()
     };
     // chars length plus separator length on both sides
-    let more_text_len = more_text.width() + 2 * "".width();
+    let more_text_len = more_text.width();
     let (text_color, sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
         ThemeHue::Light => (palette.black, palette.white),
     };
-    let left_separator = style!(sep_color, palette.orange).paint("");
     let more_styled_text = style!(text_color, palette.orange).bold().paint(more_text);
-    let right_separator = style!(palette.orange, sep_color).paint("");
-    let more_styled_text =
-        ANSIStrings(&[left_separator, more_styled_text, right_separator]).to_string();
+    let more_styled_text = ANSIStrings(&[more_styled_text]).to_string();
     LinePart {
         part: more_styled_text,
         len: more_text_len,
@@ -315,36 +309,21 @@ fn swap_layout_status(
             swap_layout_name.make_ascii_uppercase();
             let swap_layout_name_len = swap_layout_name.len() + 3;
 
-            let (prefix_separator, swap_layout_name, suffix_separator) =
+            let swap_layout_name =
                 if input_mode == InputMode::Locked {
-                    (
-                        style!(palette.black, palette.fg).paint(""),
-                        style!(palette.black, palette.fg)
-                            .italic()
-                            .paint(&swap_layout_name),
-                        style!(palette.fg, palette.black).paint(""),
-                    )
+                    style!(palette.black, palette.fg)
+                        .italic()
+                        .paint(&swap_layout_name)
                 } else if is_swap_layout_damaged {
-                    (
-                        style!(palette.black, palette.fg).paint(""),
-                        style!(palette.black, palette.fg)
-                            .bold()
-                            .paint(&swap_layout_name),
-                        style!(palette.fg, palette.black).paint(""),
-                    )
+                    style!(palette.black, palette.fg)
+                        .bold()
+                        .paint(&swap_layout_name)
                 } else {
-                    (
-                        style!(palette.black, palette.green).paint(""),
-                        style!(palette.black, palette.green)
-                            .bold()
-                            .paint(&swap_layout_name),
-                        style!(palette.green, palette.black).paint(""),
-                    )
+                    style!(palette.black, palette.green)
+                        .bold()
+                        .paint(&swap_layout_name)
                 };
-            let swap_layout_indicator = format!(
-                "{}{}{}",
-                prefix_separator, swap_layout_name, suffix_separator
-            );
+            let swap_layout_indicator = swap_layout_name;
             let (part, full_len) = (format!("{}", swap_layout_indicator), swap_layout_name_len);
             let short_len = swap_layout_name_len + 1; // 1 is the space between
             if full_len <= max_len {
@@ -355,7 +334,7 @@ fn swap_layout_status(
                 })
             } else if short_len <= max_len && input_mode != InputMode::Locked {
                 Some(LinePart {
-                    part: swap_layout_indicator,
+                    part: swap_layout_indicator.to_string(),
                     len: short_len,
                     tab_index: None,
                 })
