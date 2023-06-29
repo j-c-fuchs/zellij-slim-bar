@@ -110,7 +110,6 @@ impl ZellijPlugin for SlimBar {
                 t,
                 is_alternate_tab,
                 self.mode_info.style.colors,
-                self.mode_info.capabilities,
             );
             is_alternate_tab = !is_alternate_tab;
             all_tabs.push(tab);
@@ -121,7 +120,6 @@ impl ZellijPlugin for SlimBar {
             active_tab_index,
             cols.saturating_sub(1),
             self.mode_info.style.colors,
-            self.mode_info.capabilities,
             self.mode_info.style.hide_session_name,
             self.mode_info.mode,
             &active_swap_layout_name,

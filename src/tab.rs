@@ -83,9 +83,8 @@ pub fn render_tab(
 pub fn tab_style(
     mut tabname: String,
     tab: &TabInfo,
-    mut is_alternate_tab: bool,
+    is_alternate_tab: bool,
     palette: Palette,
-    capabilities: PluginCapabilities,
 ) -> LinePart {
     if tab.is_sync_panes_active {
         tabname.push_str(" (Sync)");

@@ -17,7 +17,6 @@ fn populate_tabs_in_tab_line(
     tabs_to_render: &mut Vec<LinePart>,
     cols: usize,
     palette: Palette,
-    capabilities: PluginCapabilities,
 ) {
     let mut middle_size = get_current_title_len(tabs_to_render);
 
@@ -242,7 +241,6 @@ pub fn tab_line(
     active_tab_index: usize,
     cols: usize,
     palette: Palette,
-    capabilities: PluginCapabilities,
     hide_session_name: bool,
     mode: InputMode,
     active_swap_layout_name: &Option<String>,
@@ -274,7 +272,6 @@ pub fn tab_line(
         &mut tabs_to_render,
         cols.saturating_sub(prefix_len),
         palette,
-        capabilities,
     );
     prefix.append(&mut tabs_to_render);
 
