@@ -120,7 +120,6 @@ impl ZellijPlugin for SlimBar {
             active_tab_index,
             cols.saturating_sub(1),
             self.mode_info.style.colors,
-            self.mode_info.style.hide_session_name,
             self.mode_info.mode,
             &active_swap_layout_name,
             is_swap_layout_dirty,

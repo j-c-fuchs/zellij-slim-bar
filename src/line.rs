@@ -159,7 +159,7 @@ fn right_more_message(
     }
 }
 
-fn session_part(session_name: Option<&str>, palette: Palette, cols: usize) -> LinePart {
+fn session_part(session_name: Option<&str>, palette: Palette) -> LinePart {
     let bg_color = match palette.theme_hue {
         ThemeHue::Dark => palette.black,
         ThemeHue::Light => palette.white,
@@ -183,7 +183,7 @@ fn session_part(session_name: Option<&str>, palette: Palette, cols: usize) -> Li
     }
 }
 
-fn mode_part(mode: InputMode, palette: Palette, cols: usize) -> LinePart {
+fn mode_part(mode: InputMode, palette: Palette) -> LinePart {
     let bg_color = match palette.theme_hue {
         ThemeHue::Dark => palette.black,
         ThemeHue::Light => palette.white,
@@ -222,7 +222,6 @@ pub fn bar_line(
     active_tab_index: usize,
     cols: usize,
     palette: Palette,
-    hide_session_name: bool,
     mode: InputMode,
     active_swap_layout_name: &Option<String>,
     is_swap_layout_dirty: bool,
@@ -235,7 +234,7 @@ pub fn bar_line(
         tabs_before_active.pop().unwrap()
     };
 
-    let mut left_parts = vec![mode_part(mode, palette, cols)];
+    let mut left_parts = vec![mode_part(mode, palette)];
     let left_len = get_current_title_len(&left_parts);
     if left_len + active_tab.len > cols {
         return left_parts;
@@ -249,7 +248,7 @@ pub fn bar_line(
             mode,
             &palette,
         ),
-        Some(session_part(session_name, palette, cols)),
+        Some(session_part(session_name, palette)),
     ].into_iter().filter_map(|x| x).collect();
 
     while !right_parts.is_empty() && left_len + active_tab.len + get_current_title_len(&right_parts) > cols {
