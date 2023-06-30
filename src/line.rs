@@ -167,7 +167,6 @@ fn tab_line_prefix(
 ) -> Vec<LinePart> {
     vec![
         zellij_prefix_part(palette, cols),
-        session_part(session_name, palette, cols),
         mode_part(mode, palette, cols),
     ]
 }
@@ -267,15 +266,26 @@ pub fn bar_line(
     } else {
         tabs_before_active.pop().unwrap()
     };
-    let mut line = match hide_session_name {
-        true => tab_line_prefix(None, mode, palette, cols),
-        false => tab_line_prefix(session_name, mode, palette, cols),
-    };
-    let prefix_len = get_current_title_len(&line);
 
-    // if active tab alone won't fit in cols, don't draw any tabs
-    if prefix_len + active_tab.len > cols {
-        return line;
+    let mut left_parts = vec![mode_part(mode, palette, cols)];
+    let left_len = get_current_title_len(&left_parts);
+    if left_len + active_tab.len > cols {
+        return left_parts;
+    }
+
+    let mut right_parts: Vec<LinePart> = [
+        swap_layout_status(
+            cols,
+            active_swap_layout_name,
+            is_swap_layout_dirty,
+            mode,
+            &palette,
+        ),
+        Some(session_part(session_name, palette, cols)),
+    ].into_iter().filter_map(|x| x).collect();
+
+    while !right_parts.is_empty() && left_len + active_tab.len + get_current_title_len(&right_parts) > cols {
+        right_parts.remove(0);
     }
 
     let mut tabs_to_render = vec![active_tab];
@@ -284,36 +294,13 @@ pub fn bar_line(
         &mut tabs_before_active,
         &mut tabs_after_active,
         &mut tabs_to_render,
-        cols.saturating_sub(prefix_len),
+        cols.saturating_sub(left_len + get_current_title_len(&right_parts)),
         palette,
     );
-    line.append(&mut tabs_to_render);
+    left_parts.append(&mut tabs_to_render);
+    left_parts.append(&mut right_parts);
 
-    let current_title_len = get_current_title_len(&line);
-    if current_title_len < cols {
-        let mut remaining_space = cols - current_title_len;
-        if let Some(swap_layout_status) = swap_layout_status(
-            remaining_space,
-            active_swap_layout_name,
-            is_swap_layout_dirty,
-            mode,
-            &palette,
-        ) {
-            remaining_space -= swap_layout_status.len;
-            let mut buffer = String::new();
-            for _ in 0..remaining_space {
-                buffer.push_str(&style!(palette.black, palette.black).paint(" ").to_string());
-            }
-            line.push(LinePart {
-                part: buffer,
-                len: remaining_space,
-                tab_index: None,
-            });
-            line.push(swap_layout_status);
-        }
-    }
-
-    line
+    left_parts
 }
 
 fn swap_layout_status(
