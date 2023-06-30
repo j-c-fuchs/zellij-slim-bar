@@ -242,7 +242,6 @@ pub fn bar_line(
 
     let mut right_parts: Vec<LinePart> = [
         swap_layout_status(
-            cols,
             active_swap_layout_name,
             is_swap_layout_dirty,
             mode,
@@ -271,7 +270,6 @@ pub fn bar_line(
 }
 
 fn swap_layout_status(
-    max_len: usize,
     swap_layout_name: &Option<String>,
     is_swap_layout_damaged: bool,
     input_mode: InputMode,
@@ -297,15 +295,11 @@ fn swap_layout_status(
                         .bold()
                         .paint(&swap_layout_name)
                 };
-            if swap_layout_name_len <= max_len {
-                Some(LinePart {
-                    part: swap_layout_name.to_string(),
-                    len: swap_layout_name_len,
-                    tab_index: None,
-                })
-            } else {
-                None
-            }
+            Some(LinePart {
+                part: swap_layout_name.to_string(),
+                len: swap_layout_name_len,
+                tab_index: None,
+            })
         },
         None => None,
     }
