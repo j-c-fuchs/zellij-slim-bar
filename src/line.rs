@@ -4,7 +4,7 @@ use crate::LinePart;
 use zellij_tile::prelude::*;
 use zellij_tile_utils::style;
 
-fn get_current_title_len(current_title: &[LinePart]) -> usize {
+fn get_parts_len(current_title: &[LinePart]) -> usize {
     current_title.iter().map(|p| p.len).sum()
 }
 
@@ -17,7 +17,7 @@ fn populate_tabs_in_tab_line(
     cols: usize,
     palette: Palette,
 ) {
-    let mut middle_size = get_current_title_len(tabs_to_render);
+    let mut middle_size = get_parts_len(tabs_to_render);
 
     let mut total_left = 0;
     let mut total_right = 0;
@@ -266,7 +266,7 @@ pub fn bar_line(
     };
 
     let mut left_parts = vec![mode_part(mode, palette)];
-    let left_len = get_current_title_len(&left_parts);
+    let left_len = get_parts_len(&left_parts);
     if left_len + active_tab.len > cols {
         return left_parts;
     }
@@ -280,7 +280,7 @@ pub fn bar_line(
         Some(session_part(session_name, palette)),
     ].into_iter().filter_map(|x| x).collect();
 
-    while !right_parts.is_empty() && left_len + active_tab.len + get_current_title_len(&right_parts) > cols {
+    while !right_parts.is_empty() && left_len + active_tab.len + get_parts_len(&right_parts) > cols {
         right_parts.remove(0);
     }
 
@@ -290,7 +290,7 @@ pub fn bar_line(
         &mut tabs_before_active,
         &mut tabs_after_active,
         &mut tabs_to_render,
-        cols.saturating_sub(left_len + get_current_title_len(&right_parts)),
+        cols.saturating_sub(left_len + get_parts_len(&right_parts)),
         palette,
     );
     left_parts.append(&mut tabs_to_render);
