@@ -6,7 +6,7 @@ use std::convert::TryInto;
 
 use zellij_tile::prelude::*;
 
-use crate::line::tab_line;
+use crate::line::bar_line;
 use crate::tab::tab_style;
 
 #[derive(Debug, Default)]
@@ -114,7 +114,7 @@ impl ZellijPlugin for SlimBar {
             is_alternate_tab = !is_alternate_tab;
             all_tabs.push(tab);
         }
-        let tab_line = tab_line(
+        let bar_line = bar_line(
             self.mode_info.session_name.as_deref(),
             all_tabs,
             active_tab_index,
@@ -127,7 +127,7 @@ impl ZellijPlugin for SlimBar {
         );
         let mut s = String::new();
         let mut len_cnt = 0;
-        for bar_part in tab_line {
+        for bar_part in bar_line {
             s = format!("{}{}", s, &bar_part.part);
 
             if self.should_change_tab

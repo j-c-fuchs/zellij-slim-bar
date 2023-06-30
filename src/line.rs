@@ -249,7 +249,7 @@ fn mode_part(mode: InputMode, palette: Palette, cols: usize) -> LinePart {
     }
 }
 
-pub fn tab_line(
+pub fn bar_line(
     session_name: Option<&str>,
     mut all_tabs: Vec<LinePart>,
     active_tab_index: usize,
