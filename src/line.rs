@@ -109,13 +109,11 @@ fn left_more_message(
     if tab_count_to_the_left == 0 {
         return LinePart::default();
     }
-    let more_text = if tab_count_to_the_left < 10000 {
-        format!(" ← +{} ", tab_count_to_the_left)
+    let more_text = if tab_count_to_the_left < 10 {
+        format!(" << {} ", tab_count_to_the_left)
     } else {
-        " ← +many ".to_string()
+        " <<< ".to_string()
     };
-    // 238
-    // chars length plus separator length on both sides
     let more_text_len = more_text.width();
     let (text_color, _sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
@@ -140,12 +138,11 @@ fn right_more_message(
     if tab_count_to_the_right == 0 {
         return LinePart::default();
     };
-    let more_text = if tab_count_to_the_right < 10000 {
-        format!(" +{} → ", tab_count_to_the_right)
+    let more_text = if tab_count_to_the_right < 10 {
+        format!(" {} >> ", tab_count_to_the_right)
     } else {
-        " +many → ".to_string()
+        " >>> ".to_string()
     };
-    // chars length plus separator length on both sides
     let more_text_len = more_text.width();
     let (text_color, _sep_color) = match palette.theme_hue {
         ThemeHue::Dark => (palette.white, palette.black),
