@@ -244,7 +244,6 @@ pub fn bar_line(
         swap_layout_status(
             active_swap_layout_name,
             is_swap_layout_dirty,
-            mode,
             &palette,
         ),
         Some(session_part(session_name, palette)),
@@ -272,7 +271,6 @@ pub fn bar_line(
 fn swap_layout_status(
     swap_layout_name: &Option<String>,
     is_swap_layout_damaged: bool,
-    input_mode: InputMode,
     palette: &Palette,
 ) -> Option<LinePart> {
     match swap_layout_name {
@@ -282,11 +280,7 @@ fn swap_layout_status(
             let swap_layout_name_len = swap_layout_name.len() + 3;
 
             let swap_layout_name =
-                if input_mode == InputMode::Locked {
-                    style!(palette.black, palette.fg)
-                        .italic()
-                        .paint(&swap_layout_name)
-                } else if is_swap_layout_damaged {
+                if is_swap_layout_damaged {
                     style!(palette.black, palette.fg)
                         .bold()
                         .paint(&swap_layout_name)
