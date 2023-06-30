@@ -297,8 +297,7 @@ fn swap_layout_status(
                         .bold()
                         .paint(&swap_layout_name)
                 };
-            let swap_layout_indicator = swap_layout_name;
-            let (part, full_len) = (format!("{}", swap_layout_indicator), swap_layout_name_len);
+            let (part, full_len) = (format!("{}", swap_layout_name), swap_layout_name_len);
             let short_len = swap_layout_name_len + 1; // 1 is the space between
             if full_len <= max_len {
                 Some(LinePart {
@@ -308,7 +307,7 @@ fn swap_layout_status(
                 })
             } else if short_len <= max_len && input_mode != InputMode::Locked {
                 Some(LinePart {
-                    part: swap_layout_indicator.to_string(),
+                    part: swap_layout_name.to_string(),
                     len: short_len,
                     tab_index: None,
                 })
