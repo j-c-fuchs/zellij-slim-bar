@@ -25,7 +25,6 @@ pub fn render_tab(
 ) -> LinePart {
     let focused_clients = tab.other_focused_clients.as_slice();
     let alternate_tab_color = match palette.theme_hue {
-        // TODO: only do this if we don't have the arrow capabilities
         ThemeHue::Dark => palette.white,
         ThemeHue::Light => palette.black,
     };
