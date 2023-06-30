@@ -159,38 +159,6 @@ fn right_more_message(
     }
 }
 
-fn tab_line_prefix(
-    session_name: Option<&str>,
-    mode: InputMode,
-    palette: Palette,
-    cols: usize,
-) -> Vec<LinePart> {
-    vec![
-        zellij_prefix_part(palette, cols),
-        mode_part(mode, palette, cols),
-    ]
-}
-
-fn zellij_prefix_part(palette: Palette, cols: usize) -> LinePart {
-    let text_color = match palette.theme_hue {
-        ThemeHue::Dark => palette.white,
-        ThemeHue::Light => palette.black,
-    };
-    let bg_color = match palette.theme_hue {
-        ThemeHue::Dark => palette.black,
-        ThemeHue::Light => palette.white,
-    };
-
-    let prefix_text = " Zellij ".to_string();
-    let prefix_text_len = prefix_text.chars().count();
-    let prefix_styled_text = style!(text_color, bg_color).bold().paint(prefix_text);
-    LinePart {
-        part: prefix_styled_text.to_string(),
-        len: prefix_text_len,
-        tab_index: None,
-    }
-}
-
 fn session_part(session_name: Option<&str>, palette: Palette, cols: usize) -> LinePart {
     let bg_color = match palette.theme_hue {
         ThemeHue::Dark => palette.black,
