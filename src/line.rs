@@ -283,6 +283,7 @@ pub fn bar_line(
     while !right_parts.is_empty() && left_len + active_tab.len + get_parts_len(&right_parts) > cols {
         right_parts.remove(0);
     }
+    let right_len = get_parts_len(&right_parts);
 
     let mut tabs_to_render = vec![active_tab];
 
@@ -290,10 +291,20 @@ pub fn bar_line(
         &mut tabs_before_active,
         &mut tabs_after_active,
         &mut tabs_to_render,
-        cols.saturating_sub(left_len + get_parts_len(&right_parts)),
+        cols.saturating_sub(left_len + right_len),
         palette,
     );
     left_parts.append(&mut tabs_to_render);
+
+    let remaining_space = cols.saturating_sub(get_parts_len(&left_parts) + right_len);
+    let fill_part = style!(palette.black, palette.black)
+        .paint(" ".repeat(remaining_space))
+        .to_string();
+    left_parts.push(LinePart {
+        part: fill_part,
+        len: remaining_space,
+        tab_index: None,
+    });
     left_parts.append(&mut right_parts);
 
     left_parts
