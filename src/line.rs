@@ -159,30 +159,6 @@ fn right_more_message(
     }
 }
 
-fn session_part(session_name: Option<&str>, palette: Palette) -> LinePart {
-    let bg_color = match palette.theme_hue {
-        ThemeHue::Dark => palette.black,
-        ThemeHue::Light => palette.white,
-    };
-
-    let name = match session_name {
-        Some(n) => n,
-        None => "<unnamed>",
-    };
-    let name_part = format!(" {} ", name);
-    let name_part_len = name_part.width();
-    let text_color = match palette.theme_hue {
-        ThemeHue::Dark => palette.white,
-        ThemeHue::Light => palette.black,
-    };
-    let name_part_styled_text = style!(text_color, bg_color).bold().paint(name_part);
-    LinePart {
-        part: name_part_styled_text.to_string(),
-        len: name_part_len,
-        tab_index: None,
-    }
-}
-
 fn mode_part(mode: InputMode, palette: Palette) -> LinePart {
     let bg_color = match palette.theme_hue {
         ThemeHue::Dark => palette.black,
@@ -212,6 +188,61 @@ fn mode_part(mode: InputMode, palette: Palette) -> LinePart {
     LinePart {
         part: format!("{}", mode_part_styled_text),
         len: mode_part_len,
+        tab_index: None,
+    }
+}
+
+fn swap_layout_status(
+    swap_layout_name: &Option<String>,
+    is_swap_layout_damaged: bool,
+    palette: &Palette,
+) -> Option<LinePart> {
+    match swap_layout_name {
+        Some(swap_layout_name) => {
+            let mut swap_layout_name = format!(" {} ", swap_layout_name);
+            swap_layout_name.make_ascii_uppercase();
+            let swap_layout_name_len = swap_layout_name.len();
+
+            let swap_layout_name =
+                if is_swap_layout_damaged {
+                    style!(palette.black, palette.fg)
+                        .bold()
+                        .paint(&swap_layout_name)
+                } else {
+                    style!(palette.black, palette.green)
+                        .bold()
+                        .paint(&swap_layout_name)
+                };
+            Some(LinePart {
+                part: swap_layout_name.to_string(),
+                len: swap_layout_name_len,
+                tab_index: None,
+            })
+        },
+        None => None,
+    }
+}
+
+fn session_part(session_name: Option<&str>, palette: Palette) -> LinePart {
+    let bg_color = match palette.theme_hue {
+        ThemeHue::Dark => palette.black,
+        ThemeHue::Light => palette.white,
+    };
+
+    let name = match session_name {
+        Some(n) => n,
+        None => "<unnamed>",
+    };
+    let name_part = format!(" {} ", name);
+    let name_part_len = name_part.width();
+    let text_color = match palette.theme_hue {
+        ThemeHue::Dark => palette.white,
+        ThemeHue::Light => palette.black,
+    };
+    let name_part_styled_text = style!(text_color, bg_color).bold().paint(name_part);
+    LinePart {
+        part: name_part_styled_text.to_string(),
+        len: name_part_len,
         tab_index: None,
     }
 }
@@ -266,35 +297,4 @@ pub fn bar_line(
     left_parts.append(&mut right_parts);
 
     left_parts
-}
-
-fn swap_layout_status(
-    swap_layout_name: &Option<String>,
-    is_swap_layout_damaged: bool,
-    palette: &Palette,
-) -> Option<LinePart> {
-    match swap_layout_name {
-        Some(swap_layout_name) => {
-            let mut swap_layout_name = format!(" {} ", swap_layout_name);
-            swap_layout_name.make_ascii_uppercase();
-            let swap_layout_name_len = swap_layout_name.len();
-
-            let swap_layout_name =
-                if is_swap_layout_damaged {
-                    style!(palette.black, palette.fg)
-                        .bold()
-                        .paint(&swap_layout_name)
-                } else {
-                    style!(palette.black, palette.green)
-                        .bold()
-                        .paint(&swap_layout_name)
-                };
-            Some(LinePart {
-                part: swap_layout_name.to_string(),
-                len: swap_layout_name_len,
-                tab_index: None,
-            })
-        },
-        None => None,
-    }
 }
