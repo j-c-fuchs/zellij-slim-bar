@@ -4,8 +4,8 @@ use crate::LinePart;
 use zellij_tile::prelude::*;
 use zellij_tile_utils::style;
 
-fn get_parts_len(current_title: &[LinePart]) -> usize {
-    current_title.iter().map(|p| p.len).sum()
+fn get_parts_len(parts: &[LinePart]) -> usize {
+    parts.iter().map(|p| p.len).sum()
 }
 
 // move elements from before_active and after_active into tabs_to_render while they fit in cols
