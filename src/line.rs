@@ -203,16 +203,18 @@ fn swap_layout_status(
             swap_layout_name.make_ascii_uppercase();
             let swap_layout_name_len = swap_layout_name.len();
 
+            let fg_color = match palette.theme_hue {
+                ThemeHue::Dark => palette.black,
+                ThemeHue::Light => palette.white,
+            };
+            let bg_color = match is_swap_layout_damaged {
+                true => palette.cyan,
+                false => palette.green,
+            };
             let swap_layout_name =
-                if is_swap_layout_damaged {
-                    style!(palette.black, palette.fg)
-                        .bold()
-                        .paint(&swap_layout_name)
-                } else {
-                    style!(palette.black, palette.green)
-                        .bold()
-                        .paint(&swap_layout_name)
-                };
+                style!(fg_color, bg_color)
+                    .bold()
+                    .paint(&swap_layout_name);
             Some(LinePart {
                 part: swap_layout_name.to_string(),
                 len: swap_layout_name_len,
@@ -224,9 +226,9 @@ fn swap_layout_status(
 }
 
 fn session_part(session_name: Option<&str>, palette: Palette) -> LinePart {
-    let bg_color = match palette.theme_hue {
-        ThemeHue::Dark => palette.black,
-        ThemeHue::Light => palette.white,
+    let (text_color, bg_color) = match palette.theme_hue {
+        ThemeHue::Dark => (palette.white, palette.black),
+        ThemeHue::Light => (palette.black, palette.white),
     };
 
     let name = match session_name {
@@ -235,10 +237,6 @@ fn session_part(session_name: Option<&str>, palette: Palette) -> LinePart {
     };
     let name_part = format!(" {} ", name);
     let name_part_len = name_part.width();
-    let text_color = match palette.theme_hue {
-        ThemeHue::Dark => palette.white,
-        ThemeHue::Light => palette.black,
-    };
     let name_part_styled_text = style!(text_color, bg_color).bold().paint(name_part);
     LinePart {
         part: name_part_styled_text.to_string(),
