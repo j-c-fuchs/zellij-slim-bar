@@ -298,7 +298,9 @@ pub fn bar_line(
 
     let remaining_space = cols.saturating_sub(get_parts_len(&left_parts) + right_len);
     let fill_part = style!(palette.black, palette.black)
-        .paint(" ".repeat(remaining_space))
+        // Add + 1 to avoid the one-tile gap at the right end
+        // TODO: investigate if + 1 is correct here
+        .paint(" ".repeat(remaining_space + 1))
         .to_string();
     left_parts.push(LinePart {
         part: fill_part,
