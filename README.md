@@ -4,7 +4,7 @@ Slim bar plugin for [zellij](https://github.com/zellij-org/zellij), cloned from
 the plugin
 [compact-bar](https://github.com/zellij-org/zellij/tree/main/default-plugins/compact-bar).
 
-![screenshot](data/screenshot.jpg)
+![screenshot](data/screenshot.png)
 
 ## Installation and usage
 
